@@ -29,5 +29,19 @@ export const auth = getAuth();
 export const fireStore = getFirestore();
 
 // make it a function so that signinWithPopup won't be called right away
-export const signInWithGoogle = () =>
-  signInWithPopup(auth, provider).then((result) => console.log(result));
+// let's make it async function
+// https://blog.logrocket.com/user-authentication-firebase-react-apps/
+// https://dev.to/onurbraga/firebase-authentication-using-react-hooks-50j0
+export const signInWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    //const credential = GoogleAuthProvider.credentialFromResult(result);
+    //const token = credential.accessToken;
+    // The signed-in user info.
+    const user = result.user;
+    return user.displayName;
+    // console.log(user, "what is user for signInWithGoogle function");
+  } catch (err) {
+    console.log(err);
+  }
+};
