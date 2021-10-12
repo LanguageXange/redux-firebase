@@ -35,8 +35,6 @@ export const fireStore = getFirestore();
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
-    //const credential = GoogleAuthProvider.credentialFromResult(result);
-    //const token = credential.accessToken;
     // The signed-in user info.
     const user = result.user;
     return user.displayName;
@@ -47,9 +45,7 @@ export const signInWithGoogle = async () => {
 };
 
 export const createUserReference = async (userAuth, extrainfo) => {
-  // can I have 2 try/catch blocks?
-  // why is the displayName still null
-  console.log(extrainfo, userAuth, "what is extrainfo and userAuth");
+  // remove double try catch blocks - ugly
   try {
     if (!userAuth) return;
     const docRef = doc(fireStore, "myusers", userAuth.uid);
@@ -57,20 +53,17 @@ export const createUserReference = async (userAuth, extrainfo) => {
     if (!snapShot.exists()) {
       const { email, displayName } = userAuth;
       const createdAt = new Date();
-      try {
-        await setDoc(docRef, {
-          email,
-          displayName,
-          createdAt,
-          ...extrainfo,
-        });
-      } catch (err) {
-        console.log("error creating a new user");
-      }
+
+      await setDoc(docRef, {
+        email,
+        displayName,
+        createdAt,
+        ...extrainfo,
+      });
     }
 
     return docRef;
   } catch (err) {
-    console.log(err);
+    console.log(err, "errors creating user reference");
   }
 };

@@ -35,11 +35,12 @@ class SignUp extends React.Component {
         email,
         password
       );
-      console.log(newUser, "what is new User"); // UserCredentialImpl
-
+      // console.log(newUser, "what is new User"); // UserCredentialImpl
       //  need to pass the user object rather than entire newUser
-      newUser.user.displayName = displayName;
-      await createUserReference(newUser.user, { hobby: "daily coding" });
+      await createUserReference(newUser.user, {
+        displayName,
+        hobby: "leetcode practice",
+      });
 
       this.setState({
         displayName: "",

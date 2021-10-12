@@ -6,35 +6,38 @@ import { auth } from "../../firebase/firebase.utils";
 
 import "./header.styles.scss";
 
-const Header = ({ currentUser }) => (
-  <div className="header">
-    <Link className="logo-container" to="/">
-      <Logo className="logo" />
-    </Link>
-    <div className="options">
-      <Link className="option" to="/shop">
-        SHOP
+const Header = ({ currentUser }) => {
+  console.log(currentUser, "what is currenUSer in header component");
+  return (
+    <div className="header">
+      <Link className="logo-container" to="/">
+        <Logo className="logo" />
       </Link>
-      <Link className="option" to="/shop">
-        CONTACT
-      </Link>
-      {currentUser ? (
-        <div className="option" onClick={() => auth.signOut()}>
-          SIGN OUT
-        </div>
-      ) : (
-        <Link className="option" to="/signin">
-          SIGN IN
+      <div className="options">
+        <Link className="option" to="/shop">
+          SHOP
         </Link>
-      )}
+        <Link className="option" to="/shop">
+          CONTACT
+        </Link>
+        {currentUser ? (
+          <div className="option" onClick={() => auth.signOut()}>
+            SIGN OUT
+          </div>
+        ) : (
+          <Link className="option" to="/signin">
+            SIGN IN
+          </Link>
+        )}
 
-      {currentUser ? (
-        <div>Hello {currentUser.displayName}</div>
-      ) : (
-        <div>please sign in!</div>
-      )}
+        {currentUser ? (
+          <div>Hello {currentUser.displayName}</div>
+        ) : (
+          <div>please sign in!</div>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Header;

@@ -8,27 +8,28 @@ import Header from "./components/header/header.component";
 // firebase stuff
 import { auth, createUserReference } from "./firebase/firebase.utils";
 import { onAuthStateChanged } from "firebase/auth";
+import { getDoc } from "@firebase/firestore";
 //import { doc, getDoc, setDoc, collection, getDocs } from "firebase/firestore";
+// INTEGRATE WITH TYPESCRIPT
+// interface / union types are most common
 function App() {
-  const [myuser, setMyUser] = useState(null);
-  // how to use unsubscribe
-  // version 9 firebase
-  // how to set my user with async await and version 9 firebase inside useEffect
+  const [myuser, setMyUser] = useState();
+  // class component comparison - https://github.com/ZhangMYihua/lesson-10/blob/master/src/App.js
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       // user session authentication persistence - we get this out of the box
-
       if (user) {
-        createUserReference(user); // how to await in useEffect
-        // the problem we need to await the createUserreference to get the displayName
-        setMyUser(user);
+        const userRef = await createUserReference(user);
+        const userSnapshot = await getDoc(userRef);
+        setMyUser(userSnapshot.data());
       } else {
+        setMyUser(null); // so that when you click sign out (header component) no need to refresh to see the changes
         console.log("user not sign in");
       }
     });
 
-    return unsubscribe(); // can I write this as a clean up function? -> read the document / ask Yihua
-  });
+    return () => unsubscribe(); // clean up function
+  }, []);
 
   return (
     <div>
