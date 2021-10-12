@@ -1,7 +1,7 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
-
+import { doc, getDoc, setDoc, collection, getDocs } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyDSnXEqSj5PM90LUEc5OrGDV4PO-zlFG6U",
   authDomain: "dev-shop-28a41.firebaseapp.com",
@@ -41,6 +41,35 @@ export const signInWithGoogle = async () => {
     const user = result.user;
     return user.displayName;
     // console.log(user, "what is user for signInWithGoogle function");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const createUserReference = async (userAuth, extrainfo) => {
+  // can I have 2 try/catch blocks?
+  // why is the displayName still null
+  console.log(extrainfo, userAuth, "what is extrainfo and userAuth");
+  try {
+    if (!userAuth) return;
+    const docRef = doc(fireStore, "myusers", userAuth.uid);
+    const snapShot = await getDoc(docRef);
+    if (!snapShot.exists()) {
+      const { email, displayName } = userAuth;
+      const createdAt = new Date();
+      try {
+        await setDoc(docRef, {
+          email,
+          displayName,
+          createdAt,
+          ...extrainfo,
+        });
+      } catch (err) {
+        console.log("error creating a new user");
+      }
+    }
+
+    return docRef;
   } catch (err) {
     console.log(err);
   }
