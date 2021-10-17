@@ -3,11 +3,12 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../../assets/crown.svg";
 import { auth } from "../../firebase/firebase.utils";
-
+import CartIcon from "../cart-icon/cart-icon.component";
+import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 import "./header.styles.scss";
 
 const Header = (myprops) => {
-  const { user } = myprops;
+  const { user, cartStatus } = myprops;
   // console.log(myprops, "what is myprops");
   return (
     <div className="header">
@@ -36,7 +37,9 @@ const Header = (myprops) => {
         ) : (
           <div>please sign in!</div>
         )}
+        <CartIcon />
       </div>
+      {cartStatus ? <CartDropdown /> : null}
     </div>
   );
 };
@@ -47,5 +50,6 @@ const Header = (myprops) => {
 const getStuffFromStore = (state) => ({
   testing: state.dummy,
   user: state.user.currentUser,
+  cartStatus: state.mycart.hidden,
 });
 export default connect(getStuffFromStore)(Header);

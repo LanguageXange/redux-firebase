@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import "./App.css";
 import HomePage from "./pages/homepage/homepage.component";
@@ -12,7 +12,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { getDoc } from "@firebase/firestore";
 import { connect } from "react-redux";
 import { setCurrentUser } from "./redux/user/user-actions";
-function App({ setCurUser }) {
+function App({ setCurUser, curUser }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       // user session authentication persistence - we get this out of the box
@@ -32,15 +32,25 @@ function App({ setCurUser }) {
   return (
     <div>
       <Header />
-
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route path="/shop" component={ShopPage} />
-        <Route path="/signin" component={SignInAndSignUpPage} />
+        <Route
+          exact
+          path="/signin"
+          render={() =>
+            curUser ? <Redirect to="/" /> : <SignInAndSignUpPage />
+          }
+        />
       </Switch>
     </div>
   );
 }
+
+const getStuffFromStore = (state) => ({
+  // now we have access to curUser prop in App.js
+  curUser: state.user.currentUser,
+});
 
 // return an object
 const getActionsFromStore = (mydispatch) => ({
@@ -48,4 +58,4 @@ const getActionsFromStore = (mydispatch) => ({
   setCurUser: (user) => mydispatch(setCurrentUser(user)),
 });
 
-export default connect(null, getActionsFromStore)(App);
+export default connect(getStuffFromStore, getActionsFromStore)(App);
