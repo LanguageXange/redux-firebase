@@ -1,13 +1,14 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-
 import { ReactComponent as Logo } from "../../assets/crown.svg";
 import { auth } from "../../firebase/firebase.utils";
 
 import "./header.styles.scss";
 
-const Header = ({ currentUser }) => {
-  console.log(currentUser, "what is currenUSer in header component");
+const Header = (myprops) => {
+  const { user } = myprops;
+  // console.log(myprops, "what is myprops");
   return (
     <div className="header">
       <Link className="logo-container" to="/">
@@ -20,7 +21,7 @@ const Header = ({ currentUser }) => {
         <Link className="option" to="/shop">
           CONTACT
         </Link>
-        {currentUser ? (
+        {user ? (
           <div className="option" onClick={() => auth.signOut()}>
             SIGN OUT
           </div>
@@ -30,8 +31,8 @@ const Header = ({ currentUser }) => {
           </Link>
         )}
 
-        {currentUser ? (
-          <div>Hello {currentUser.displayName}</div>
+        {user ? (
+          <div>Hello {user.displayName}</div>
         ) : (
           <div>please sign in!</div>
         )}
@@ -40,4 +41,11 @@ const Header = ({ currentUser }) => {
   );
 };
 
-export default Header;
+// mapStateToProps is the naming convention
+// state here is the state constructed by rootReducer
+// currentUser is the initial state set in userReducer
+const getStuffFromStore = (state) => ({
+  testing: state.dummy,
+  user: state.user.currentUser,
+});
+export default connect(getStuffFromStore)(Header);

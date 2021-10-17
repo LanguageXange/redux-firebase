@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
+
 import "./App.css";
 import HomePage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
@@ -9,21 +10,18 @@ import Header from "./components/header/header.component";
 import { auth, createUserReference } from "./firebase/firebase.utils";
 import { onAuthStateChanged } from "firebase/auth";
 import { getDoc } from "@firebase/firestore";
-//import { doc, getDoc, setDoc, collection, getDocs } from "firebase/firestore";
-// INTEGRATE WITH TYPESCRIPT
-// interface / union types are most common
-function App() {
-  const [myuser, setMyUser] = useState();
-  // class component comparison - https://github.com/ZhangMYihua/lesson-10/blob/master/src/App.js
+import { connect } from "react-redux";
+import { setCurrentUser } from "./redux/user/user-actions";
+function App({ setCurUser }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       // user session authentication persistence - we get this out of the box
       if (user) {
         const userRef = await createUserReference(user);
         const userSnapshot = await getDoc(userRef);
-        setMyUser(userSnapshot.data());
+        setCurUser(userSnapshot.data());
       } else {
-        setMyUser(null); // so that when you click sign out (header component) no need to refresh to see the changes
+        setCurUser(null); // so that when you click sign out (header component) no need to refresh to see the changes
         console.log("user not sign in");
       }
     });
@@ -33,7 +31,7 @@ function App() {
 
   return (
     <div>
-      <Header currentUser={myuser} />
+      <Header />
 
       <Switch>
         <Route exact path="/" component={HomePage} />
@@ -44,4 +42,10 @@ function App() {
   );
 }
 
-export default App;
+// return an object
+const getActionsFromStore = (mydispatch) => ({
+  // now we have access to setCurUser
+  setCurUser: (user) => mydispatch(setCurrentUser(user)),
+});
+
+export default connect(null, getActionsFromStore)(App);
