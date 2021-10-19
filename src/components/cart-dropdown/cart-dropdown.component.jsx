@@ -4,13 +4,14 @@ import { withRouter } from "react-router";
 import { createStructuredSelector } from "reselect";
 import { selectCartItems } from "../../redux/cart/cart-selectors";
 import CartItem from "../cart-item/cart-item.component";
-
+import { toggleCartMenu } from "../../redux/cart/cart-actions";
 import CustomButton from "../custom-button/custom-button.component";
 
 import "./cart-dropdown.styles.scss";
 
-const CartDropdown = ({ cartItems, history }) => {
-  console.log("I am called");
+const CartDropdown = ({ cartItems, history, ...props }) => {
+  // console.log(props, "what are the prps");
+  // we have access to dispatch by default when we use connect()
   return (
     <div className="cart-dropdown">
       <div className="cart-items">
@@ -26,6 +27,7 @@ const CartDropdown = ({ cartItems, history }) => {
       <CustomButton
         onClick={() => {
           history.push("/checkout");
+          props.dispatch(toggleCartMenu());
         }}
       >
         GO TO CHECKOUT
@@ -38,4 +40,4 @@ const getStuffFromStore = createStructuredSelector({
   cartItems: selectCartItems,
 });
 
-export default withRouter(connect(getStuffFromStore, null)(CartDropdown));
+export default withRouter(connect(getStuffFromStore)(CartDropdown));
