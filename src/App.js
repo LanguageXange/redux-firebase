@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import "./App.css";
 import HomePage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
+import CheckoutPage from "./pages/checkout/checkout.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
 import Header from "./components/header/header.component";
 // firebase stuff
@@ -12,6 +13,9 @@ import { onAuthStateChanged } from "firebase/auth";
 import { getDoc } from "@firebase/firestore";
 import { connect } from "react-redux";
 import { setCurrentUser } from "./redux/user/user-actions";
+// selector
+import { createStructuredSelector } from "reselect";
+import { selectCurrentUser } from "./redux/user/user-selectors";
 function App({ setCurUser, curUser }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -35,6 +39,7 @@ function App({ setCurUser, curUser }) {
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route path="/shop" component={ShopPage} />
+        <Route exact path="/checkout" component={CheckoutPage} />
         <Route
           exact
           path="/signin"
@@ -47,9 +52,9 @@ function App({ setCurUser, curUser }) {
   );
 }
 
-const getStuffFromStore = (state) => ({
+const getStuffFromStore = createStructuredSelector({
   // now we have access to curUser prop in App.js
-  curUser: state.user.currentUser,
+  curUser: selectCurrentUser,
 });
 
 // return an object

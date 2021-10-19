@@ -6,6 +6,9 @@ import { auth } from "../../firebase/firebase.utils";
 import CartIcon from "../cart-icon/cart-icon.component";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 import "./header.styles.scss";
+import { createStructuredSelector } from "reselect";
+import { selectCartHidden } from "../../redux/cart/cart-selectors";
+import { selectCurrentUser } from "../../redux/user/user-selectors";
 
 const Header = (myprops) => {
   const { user, cartStatus } = myprops;
@@ -39,7 +42,7 @@ const Header = (myprops) => {
         )}
         <CartIcon />
       </div>
-      {cartStatus ? <CartDropdown /> : null}
+      {cartStatus ? null : <CartDropdown />}
     </div>
   );
 };
@@ -47,9 +50,20 @@ const Header = (myprops) => {
 // mapStateToProps is the naming convention
 // state here is the state constructed by rootReducer
 // currentUser is the initial state set in userReducer
-const getStuffFromStore = (state) => ({
-  testing: state.dummy,
-  user: state.user.currentUser,
-  cartStatus: state.mycart.hidden,
+// const getStuffFromStore = (state) => ({
+//   testing: state.dummy,
+//   user: state.user.currentUser,
+//   cartStatus: state.mycart.hidden,
+// });
+
+// user selector
+// const getStuffFromStore = (state) => ({
+//   user: selectCurrentUser(state),
+//   cartStatus: selectCartHidden(state),
+// });
+const getStuffFromStore = createStructuredSelector({
+  user: selectCurrentUser,
+  cartStatus: selectCartHidden,
 });
+
 export default connect(getStuffFromStore)(Header);
