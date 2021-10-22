@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-
+import memoize from "lodash.memoize";
 const selectShop = (state) => state.myshop;
 
 // create mapping string to id map -> temporary solution - this map will be removed after moving data to firebase
@@ -15,7 +15,11 @@ export const selectShopCollections = createSelector(
   (s) => s.collections
 );
 
-export const selectShopItem = (param) =>
+// need to memoize entire fn
+// Memoize does the same idea of memoization as reselect does for our selectors,
+// except this time we're memoizing the return of our function which returns our selector:
+export const selectShopItem = memoize((param) =>
   createSelector(selectShopCollections, (collections) =>
     collections.find((collection) => collection.id === map[param])
-  );
+  )
+);
