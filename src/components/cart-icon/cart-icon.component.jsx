@@ -32,7 +32,7 @@ const getStuffFromStore = createStructuredSelector({
 });
 
 //it is a convention to simply name the field key the same name as the action creator:
-// but here I name it differently to see what's actually passing in
+// but here I name it differently to demonstrate that it still works
 const getActionFromStore = (dispatch) => ({
   hiddenCart: () => dispatch(toggleCartMenu()),
 });

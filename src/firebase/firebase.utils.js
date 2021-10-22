@@ -29,7 +29,6 @@ export const auth = getAuth();
 export const fireStore = getFirestore();
 
 // make it a function so that signinWithPopup won't be called right away
-// let's make it async function
 // https://blog.logrocket.com/user-authentication-firebase-react-apps/
 // https://dev.to/onurbraga/firebase-authentication-using-react-hooks-50j0
 export const signInWithGoogle = async () => {
@@ -45,7 +44,6 @@ export const signInWithGoogle = async () => {
 };
 
 export const createUserReference = async (userAuth, extrainfo) => {
-  // remove double try catch blocks - ugly
   try {
     if (!userAuth) return;
     const docRef = doc(fireStore, "myusers", userAuth.uid);

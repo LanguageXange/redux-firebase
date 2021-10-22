@@ -4,14 +4,13 @@ import {
   clearItem,
   decreaseItem,
   increaseItem,
-  confirmDelete,
 } from "../../redux/cart/cart-actions";
 
 import "./checkout-item.styles.scss";
 
 const CheckoutItem = ({
   cartItem: { id, name, imageUrl, price, quantity },
-  dispatch, //  by default connect providese the dispatch props
+  dispatch, //  by default connect provides the dispatch props
 }) => {
   const [showWarning, setShowWarning] = useState(false);
 
@@ -59,5 +58,5 @@ const CheckoutItem = ({
   );
 };
 
-//  by default connect providese the dispatch props
+//  by default connect provides the dispatch props
 export default connect()(CheckoutItem);
