@@ -4,7 +4,6 @@ import {
   clearItem,
   decreaseItem,
   increaseItem,
-  confirmDelete,
 } from "../../redux/cart/cart-actions";
 
 import "./checkout-item.styles.scss";

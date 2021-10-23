@@ -31,7 +31,7 @@ function App({ setCurUser, curUser }) {
     });
 
     return () => unsubscribe(); // clean up function
-  }, []);
+  }, [setCurUser]);
 
   return (
     <div>
