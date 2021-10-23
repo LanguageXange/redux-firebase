@@ -5,7 +5,11 @@ import { persistStore } from "redux-persist";
 //https://redux.js.org/api/createstore
 // reducer, initialstate, enhancer function
 
-const mymiddlewares = [logger]; // in case we have more and more middlewares
+const mymiddlewares = [];
+
+if (process.env.NODE_ENV === "development") {
+  mymiddlewares.push(logger);
+}
 
 export const myStore = createStore(
   rootReducer,
