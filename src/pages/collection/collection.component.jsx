@@ -12,7 +12,6 @@ const CollectionPage = ({ collection }) => {
   // match.params.collectionItem
   return (
     <div className="collection-page">
-      hi i am collection page
       <h2 className="title">{collection.title}</h2>
       <div className="items">
         {collection.items.map((item) => (
