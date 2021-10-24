@@ -1,7 +1,17 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  getDocs,
+  writeBatch,
+  addDoc, // auto generate id for you
+} from "firebase/firestore";
+import { batch } from "react-redux";
+
 const firebaseConfig = {
   apiKey: "AIzaSyDSnXEqSj5PM90LUEc5OrGDV4PO-zlFG6U",
   authDomain: "dev-shop-28a41.firebaseapp.com",
@@ -66,4 +76,18 @@ export const createUserReference = async (userAuth, extrainfo) => {
   } catch (err) {
     console.log(err, "errors creating user reference");
   }
+};
+
+// temporary util function to move data to firebase
+// collectionRef.doc() -> there is no doc() function
+export const addCollectionAndDocument = async (collectionKey, objectsToAdd) => {
+  const collectionRef = collection(fireStore, collectionKey);
+  const batch = writeBatch(fireStore);
+  objectsToAdd.forEach((obj) => {
+    // Uncaught (in promise) FirebaseError: Function addDoc() called with invalid data. Data must be an object,
+    // const newDocRef = await addDoc(collectionRef); --> this is wrong
+    const newDocRef = doc(collectionRef); // auto generate id
+    batch.set(newDocRef, obj);
+  });
+  return await batch.commit();
 };
