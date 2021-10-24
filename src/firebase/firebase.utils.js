@@ -87,3 +87,22 @@ export const addCollectionAndDocument = async (collectionKey, objectsToAdd) => {
   });
   return await batch.commit();
 };
+
+// error - collectionSnapshop.map is not a function
+// need to do collectionSnapshot.docs.map
+export const convertCollectionsSnapshotToMap = (collectionSnapshot) => {
+  const transformCollections = collectionSnapshot.docs.map((doc) => {
+    const { title, items } = doc.data();
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items,
+    };
+  });
+
+  return transformCollections.reduce((acc, current) => {
+    acc[current.title.toLowerCase()] = current;
+    return acc;
+  }, {});
+};
