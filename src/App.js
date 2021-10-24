@@ -18,20 +18,18 @@ import { createStructuredSelector } from "reselect";
 import { selectCurrentUser } from "./redux/user/user-selectors";
 function App({ setCurUser, curUser }) {
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      // user session authentication persistence - we get this out of the box
+    // onAuthStateChanged is an observer and returns an unsubscribe function
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userRef = await createUserReference(user);
         const userSnapshot = await getDoc(userRef);
         setCurUser(userSnapshot.data());
       } else {
-        setCurUser(null); // so that when you click sign out (header component) no need to refresh to see the changes
+        setCurUser(null);
         console.log("user not sign in");
       }
     });
-
-    return () => unsubscribe(); // clean up function
-  }, []);
+  }, [setCurUser]);
 
   return (
     <div>
