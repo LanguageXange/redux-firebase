@@ -6,11 +6,8 @@ import {
   getDoc,
   setDoc,
   collection,
-  getDocs,
   writeBatch,
-  addDoc, // auto generate id for you
 } from "firebase/firestore";
-import { batch } from "react-redux";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDSnXEqSj5PM90LUEc5OrGDV4PO-zlFG6U",
@@ -55,10 +52,9 @@ export const signInWithGoogle = async () => {
 };
 
 export const createUserReference = async (userAuth, extrainfo) => {
-  // remove double try catch blocks - ugly
   try {
     if (!userAuth) return;
-    const docRef = doc(fireStore, "myusers", userAuth.uid);
+    const docRef = doc(fireStore, "myusers", userAuth.uid); // or doc(fireStore, path)
     const snapShot = await getDoc(docRef);
     if (!snapShot.exists()) {
       const { email, displayName } = userAuth;

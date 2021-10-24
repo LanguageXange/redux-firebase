@@ -8,11 +8,7 @@ import CheckoutPage from "./pages/checkout/checkout.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
 import Header from "./components/header/header.component";
 // firebase stuff
-import {
-  auth,
-  createUserReference,
-  addCollectionAndDocument,
-} from "./firebase/firebase.utils";
+import { auth, createUserReference } from "./firebase/firebase.utils";
 import { onAuthStateChanged } from "firebase/auth";
 import { getDoc } from "@firebase/firestore";
 import { connect } from "react-redux";
@@ -20,8 +16,7 @@ import { setCurrentUser } from "./redux/user/user-actions";
 // selector
 import { createStructuredSelector } from "reselect";
 import { selectCurrentUser } from "./redux/user/user-selectors";
-import { selectCollectionsForPreview } from "./redux/shop/shop-selectors";
-function App({ setCurUser, curUser, itemsArray }) {
+function App({ setCurUser, curUser }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       // user session authentication persistence - we get this out of the box
@@ -34,10 +29,7 @@ function App({ setCurUser, curUser, itemsArray }) {
         console.log("user not sign in");
       }
     });
-    addCollectionAndDocument(
-      "mycollections",
-      itemsArray.map(({ title, items }) => ({ title, items }))
-    );
+
     return () => unsubscribe(); // clean up function
   }, []);
 
@@ -63,7 +55,6 @@ function App({ setCurUser, curUser, itemsArray }) {
 const getStuffFromStore = createStructuredSelector({
   // now we have access to curUser prop in App.js
   curUser: selectCurrentUser,
-  itemsArray: selectCollectionsForPreview,
 });
 
 // return an object
