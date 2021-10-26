@@ -17,7 +17,13 @@ export const selectShopItem = memoize((param) =>
   )
 );
 
-export const selectShopFetching = createSelector(
+// export const selectShopFetching = createSelector(
+//   selectShop,
+//   (s) => s.isFetching
+// );
+
+export const selecttIsCollectionLoaded = createSelector(
   selectShop,
-  (s) => s.isFetching
+  (s) => !!s.collections // convert to a boolean
 );
+// make sure that we do have collections loaded!

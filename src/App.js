@@ -18,8 +18,8 @@ import { createStructuredSelector } from "reselect";
 import { selectCurrentUser } from "./redux/user/user-selectors";
 function App({ setCurUser, curUser }) {
   useEffect(() => {
-    // onAuthStateChanged is an observer and returns an unsubscribe function
-    onAuthStateChanged(auth, async (user) => {
+    // onAuthStateChanged is an observer and returns Unsubscribe huh?
+    const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userRef = await createUserReference(user);
         const userSnapshot = await getDoc(userRef);
@@ -29,6 +29,8 @@ function App({ setCurUser, curUser }) {
         console.log("user not sign in");
       }
     });
+
+    return () => unsub(); // clean up function
   }, [setCurUser]);
 
   return (

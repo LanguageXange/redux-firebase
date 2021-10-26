@@ -16,20 +16,29 @@ export const fetchCollectionFail = (errormessage) => ({
   payload: errormessage,
 });
 // a thunk is a function that wraps an expression to delay its evaluation.
-//  return a function to perform dispatch
+// thunk is a function returned by another function
+// https://daveceddia.com/what-is-a-thunk/
+// redux-thunk does: it is a middleware that looks at every action that passes through the system,
+//and if it’s a function, it calls that function. That’s all it does.
+
+// Redux will pass two arguments to thunk functions: dispatch, so that they can dispatch new actions if they need to; and getState, so they can access the current state.
+
 export const fetchCollectionStartAsync = () => {
-  return async (dispatch) => {
+  return async (mydispatch, second) => {
     try {
       const mycollectionRef = collection(fireStore, "mycollections");
-      dispatch(fetchCollectionStart());
+      mydispatch(fetchCollectionStart());
       // do I await getDocs here?
       // and turn dispatch into async dispatch above and add try catch block ?
       const mycollectionSnapShot = await getDocs(mycollectionRef); //console.log(mycollectionSnapShot); // array of object
       const collectionMap =
         convertCollectionsSnapshotToMap(mycollectionSnapShot);
-      dispatch(fetchCollectionSuccess(collectionMap));
+      mydispatch(fetchCollectionSuccess(collectionMap));
+
+      // console.log(mydispatch, "what is first argument - should be dispatch");
+      // console.log(second, "what is second arg - it should be getState");
     } catch (err) {
-      dispatch(fetchCollectionFail(err.message));
+      mydispatch(fetchCollectionFail(err.message));
     }
   };
 };
