@@ -4,12 +4,12 @@ import CollectionContainer from "../collection/collection.container";
 import { Route } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { fetchCollectionStartAsync } from "../../redux/shop/shop-actions";
+import { fetchCollectionStart } from "../../redux/shop/shop-actions";
 
-function ShopPage({ match, asyncFetchCollection }) {
+function ShopPage({ match, startFetchCollection }) {
   useEffect(() => {
-    asyncFetchCollection();
-  }, [asyncFetchCollection]);
+    startFetchCollection();
+  }, [startFetchCollection]);
 
   return (
     <div className="shop-page">
@@ -24,7 +24,7 @@ function ShopPage({ match, asyncFetchCollection }) {
 }
 
 const getMyActions = (dispatch) => ({
-  asyncFetchCollection: () => dispatch(fetchCollectionStartAsync()),
+  startFetchCollection: () => dispatch(fetchCollectionStart()),
 });
 
 export default connect(null, getMyActions)(ShopPage);
