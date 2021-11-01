@@ -7,11 +7,9 @@ const initial_state = {
 
 const userReducer = (state = initial_state, action) => {
   switch (action.type) {
-    case UserActionTypes.GOOGLE_SIGNIN_SUCCESS:
-    case UserActionTypes.EMAIL_SIGNIN_SUCCESS:
+    case UserActionTypes.SIGNIN_SUCCESS:
       return { ...state, currentUser: action.payload, error: null };
-    case UserActionTypes.GOOGLE_SIGNIN_FAIL:
-    case UserActionTypes.EMAIL_SIGNIN_FAIL:
+    case UserActionTypes.SIGNIN_FAIL:
       return { ...state, error: action.payload };
     default:
       return state;

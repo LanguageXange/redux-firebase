@@ -7,20 +7,9 @@ export const setCurrentUser = (user) => ({
   payload: user,
 });
 
-// adding actions for sagas
-
+// GOOGLE
 export const googleSignInStart = () => ({
   type: UserActionTypes.GOOGLE_SIGNIN_START,
-});
-
-export const googleSignInFail = (message) => ({
-  type: UserActionTypes.GOOGLE_SIGNIN_FAIL,
-  payload: message,
-});
-
-export const googleSignInSuccess = (user) => ({
-  type: UserActionTypes.GOOGLE_SIGNIN_SUCCESS,
-  payload: user,
 });
 
 // EMAIL
@@ -29,12 +18,14 @@ export const emailSignInStart = (emailandPass) => ({
   payload: emailandPass,
 });
 
-export const emailSignInFail = (message) => ({
-  type: UserActionTypes.EMAIL_SIGNIN_FAIL,
+// refactor a bit so that both google and email sign in use the same
+// sign in success and sign in fail action creator
+export const signInFail = (message) => ({
+  type: UserActionTypes.SIGNIN_FAIL,
   payload: message,
 });
 
-export const emailSignInSuccess = (user) => ({
-  type: UserActionTypes.EMAIL_SIGNIN_SUCCESS,
+export const signInSuccess = (user) => ({
+  type: UserActionTypes.SIGNIN_SUCCESS,
   payload: user,
 });

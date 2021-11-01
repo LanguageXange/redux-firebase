@@ -7,19 +7,14 @@ import {
   auth,
   createUserReference,
 } from "../../firebase/firebase.utils";
-import {
-  googleSignInSuccess,
-  googleSignInFail,
-  emailSignInFail,
-  emailSignInSuccess,
-} from "./user-actions";
+import { signInFail, signInSuccess } from "./user-actions";
 
 // remember that we receive email and password as an object (user-actions.js) when email sign in start
 // check sign-in component
 // mysaga@gmail.com
 // 123456789
 //  payload: 'Firebase: Error (auth/invalid-value-(email),-starting-an-object-on-a-scalar-field).'
-//
+
 export function* emailSignIn(action) {
   const { email, password } = action.payload;
   try {
@@ -27,9 +22,9 @@ export function* emailSignIn(action) {
     const myuser = yield response.user;
     const userRef = yield call(createUserReference, myuser);
     const userSnapShot = yield getDoc(userRef);
-    yield put(emailSignInSuccess(userSnapShot.data()));
+    yield put(signInSuccess(userSnapShot.data()));
   } catch (err) {
-    yield put(emailSignInFail(err.message));
+    yield put(signInFail(err.message));
   }
 }
 
@@ -44,9 +39,9 @@ export function* googleSignIn() {
     const userRef = yield call(createUserReference, user);
     const userSnapShot = yield getDoc(userRef);
     // console.log(user, userRef, userSnapShot, "what arer these in usersagas.js");
-    yield put(googleSignInSuccess(userSnapShot.data()));
+    yield put(signInSuccess(userSnapShot.data()));
   } catch (err) {
-    yield put(googleSignInFail(err.message));
+    yield put(signInFail(err.message));
   }
 }
 

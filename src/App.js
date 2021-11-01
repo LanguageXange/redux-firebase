@@ -7,16 +7,11 @@ import ShopPage from "./pages/shop/shop.component";
 import CheckoutPage from "./pages/checkout/checkout.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
 import Header from "./components/header/header.component";
-// firebase stuff
-import { auth, createUserReference } from "./firebase/firebase.utils";
-import { onAuthStateChanged } from "firebase/auth";
-import { getDoc } from "@firebase/firestore";
 import { connect } from "react-redux";
-import { setCurrentUser } from "./redux/user/user-actions";
 // selector
 import { createStructuredSelector } from "reselect";
 import { selectCurrentUser } from "./redux/user/user-selectors";
-function App({ setCurUser, curUser }) {
+function App({ curUser }) {
   // useEffect(() => {
   //   // onAuthStateChanged is an observer and returns Unsubscribe huh?
   //   const unsub = onAuthStateChanged(auth, async (user) => {
@@ -32,7 +27,6 @@ function App({ setCurUser, curUser }) {
 
   //   return () => unsub(); // clean up function
   // }, [setCurUser]);
-
   return (
     <div>
       <Header />
@@ -57,10 +51,4 @@ const getStuffFromStore = createStructuredSelector({
   curUser: selectCurrentUser,
 });
 
-// return an object
-const getActionsFromStore = (mydispatch) => ({
-  // now we have access to setCurUser
-  setCurUser: (user) => mydispatch(setCurrentUser(user)),
-});
-
-export default connect(getStuffFromStore, getActionsFromStore)(App);
+export default connect(getStuffFromStore)(App);
