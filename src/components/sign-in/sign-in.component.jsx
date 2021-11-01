@@ -3,8 +3,11 @@ import React from "react";
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
 import "./sign-in.styles.scss";
-import { signInWithGoogle } from "../../firebase/firebase.utils";
-import { googleSignInStart } from "../../redux/user/user-actions";
+
+import {
+  googleSignInStart,
+  emailSignInStart,
+} from "../../redux/user/user-actions";
 import { connect } from "react-redux";
 class SignIn extends React.Component {
   constructor(props) {
@@ -18,8 +21,9 @@ class SignIn extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-
-    this.setState({ email: "", password: "" });
+    const { myEmailSignIn } = this.props;
+    const { email, password } = this.state;
+    myEmailSignIn(email, password);
   };
 
   handleChange = (event) => {
@@ -52,7 +56,11 @@ class SignIn extends React.Component {
             required
           />
           <CustomButton type="submit"> Sign in </CustomButton>
-          <CustomButton type="button" onClick={this.props.testing} isGoogle>
+          <CustomButton
+            type="button"
+            onClick={this.props.myGoogleSignIn}
+            isGoogle
+          >
             {" "}
             Sign in With Google{" "}
           </CustomButton>
@@ -63,7 +71,9 @@ class SignIn extends React.Component {
 }
 
 const getMyActions = (dispatch) => ({
-  testing: () => dispatch(googleSignInStart()),
+  myGoogleSignIn: () => dispatch(googleSignInStart()),
+  myEmailSignIn: (email, password) =>
+    dispatch(emailSignInStart({ email, password })),
 });
 
 export default connect(null, getMyActions)(SignIn);
@@ -72,4 +82,4 @@ export default connect(null, getMyActions)(SignIn);
 // operationType: "signIn"
 // providerId: "google.com"
 // user: UserImpl {providerId: 'firebase', emailVerified: true, isAnonymous: false, tenantId: null, providerData: Array(1), …}
-// _tokenResponse: {federatedId: 'https://accounts.google.com/117529561873987179493', providerId: 'google.com', email: 'xx', emailVerified: true, firstName: 'xxx'}
+// _tokenResponse: {federatedId: 'https://accounts.google.com/xxxxx', providerId: 'google.com', email: 'xx', emailVerified: true, firstName: 'xxx'}

@@ -24,16 +24,17 @@ export const googleSignInSuccess = (user) => ({
 });
 
 // EMAIL
-export const emailSignInStart = () => ({
-  type: UserActionTypes.GOOGLE_SIGNIN_START,
+export const emailSignInStart = (emailandPass) => ({
+  type: UserActionTypes.EMAIL_SIGNIN_START,
+  payload: emailandPass,
 });
 
 export const emailSignInFail = (message) => ({
-  type: UserActionTypes.GOOGLE_SIGNIN_FAIL,
+  type: UserActionTypes.EMAIL_SIGNIN_FAIL,
   payload: message,
 });
 
-export const emailSignInSuccess = (emailandPass) => ({
-  type: UserActionTypes.GOOGLE_SIGNIN_SUCCESS,
-  payload: emailandPass,
+export const emailSignInSuccess = (user) => ({
+  type: UserActionTypes.EMAIL_SIGNIN_SUCCESS,
+  payload: user,
 });

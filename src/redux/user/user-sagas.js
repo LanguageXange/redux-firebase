@@ -1,5 +1,5 @@
 import { takeLatest, put, all, call } from "redux-saga/effects";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { getDoc } from "@firebase/firestore";
 import { UserActionTypes } from "./user-types";
 import {
@@ -7,7 +7,35 @@ import {
   auth,
   createUserReference,
 } from "../../firebase/firebase.utils";
-import { googleSignInSuccess, googleSignInFail } from "./user-actions";
+import {
+  googleSignInSuccess,
+  googleSignInFail,
+  emailSignInFail,
+  emailSignInSuccess,
+} from "./user-actions";
+
+// remember that we receive email and password as an object (user-actions.js) when email sign in start
+// check sign-in component
+// mysaga@gmail.com
+// 123456789
+//  payload: 'Firebase: Error (auth/invalid-value-(email),-starting-an-object-on-a-scalar-field).'
+//
+export function* emailSignIn(action) {
+  const { email, password } = action.payload;
+  try {
+    const response = yield signInWithEmailAndPassword(auth, email, password);
+    const myuser = yield response.user;
+    const userRef = yield call(createUserReference, myuser);
+    const userSnapShot = yield getDoc(userRef);
+    yield put(emailSignInSuccess(userSnapShot.data()));
+  } catch (err) {
+    yield put(emailSignInFail(err.message));
+  }
+}
+
+export function* onEmailSignIn() {
+  yield takeLatest(UserActionTypes.EMAIL_SIGNIN_START, emailSignIn);
+}
 
 export function* googleSignIn() {
   try {
@@ -41,5 +69,5 @@ export function* onGoogleSignInStart() {
 //   };
 
 export function* userSagas() {
-  yield all([call(onGoogleSignInStart)]);
+  yield all([call(onGoogleSignInStart), call(onEmailSignIn)]);
 }
