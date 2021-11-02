@@ -1,4 +1,9 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import {
@@ -105,4 +110,19 @@ export const convertCollectionsSnapshotToMap = (collectionSnapshot) => {
     acc[current.title.toLowerCase()] = current;
     return acc;
   }, {});
+};
+
+// helper function because onAuthStateChange is using observer pattern
+
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        resolve(user);
+      } else {
+        reject();
+      }
+    });
+    unsubscribe();
+  });
 };

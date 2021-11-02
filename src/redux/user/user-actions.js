@@ -29,3 +29,8 @@ export const signInSuccess = (user) => ({
   type: UserActionTypes.SIGNIN_SUCCESS,
   payload: user,
 });
+
+// recreating persistence with sagas
+export const checkUserSession = () => ({
+  type: UserActionTypes.CHECK_USER_SESSION,
+});

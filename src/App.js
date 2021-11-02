@@ -11,22 +11,13 @@ import { connect } from "react-redux";
 // selector
 import { createStructuredSelector } from "reselect";
 import { selectCurrentUser } from "./redux/user/user-selectors";
-function App({ curUser }) {
-  // useEffect(() => {
-  //   // onAuthStateChanged is an observer and returns Unsubscribe huh?
-  //   const unsub = onAuthStateChanged(auth, async (user) => {
-  //     if (user) {
-  //       const userRef = await createUserReference(user);
-  //       const userSnapshot = await getDoc(userRef);
-  //       setCurUser(userSnapshot.data());
-  //     } else {
-  //       setCurUser(null);
-  //       console.log("user not sign in");
-  //     }
-  //   });
+import { checkUserSession } from "./redux/user/user-actions";
 
-  //   return () => unsub(); // clean up function
-  // }, [setCurUser]);
+function App({ curUser, checkuser }) {
+  useEffect(() => {
+    checkuser();
+  }, [checkuser]);
+
   return (
     <div>
       <Header />
@@ -51,4 +42,8 @@ const getStuffFromStore = createStructuredSelector({
   curUser: selectCurrentUser,
 });
 
-export default connect(getStuffFromStore)(App);
+const mapDispatchToProps = (dispatch) => ({
+  checkuser: () => dispatch(checkUserSession()),
+});
+
+export default connect(getStuffFromStore, mapDispatchToProps)(App);
