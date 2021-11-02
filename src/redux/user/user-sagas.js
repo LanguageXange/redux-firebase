@@ -8,7 +8,12 @@ import {
   createUserReference,
   getCurrentUser,
 } from "../../firebase/firebase.utils";
-import { signInFail, signInSuccess } from "./user-actions";
+import {
+  signInFail,
+  signInSuccess,
+  signOutSuccess,
+  signOutFail,
+} from "./user-actions";
 
 // remember that we receive email and password as an object (user-actions.js) when email sign in start
 // check sign-in component
@@ -104,11 +109,27 @@ export function* onCheckUserSession() {
   yield takeLatest(UserActionTypes.CHECK_USER_SESSION, checkUserAuth);
 }
 
+// sign out
+
+export function* userSignOut() {
+  try {
+    yield auth.signOut();
+    yield put(signOutSuccess());
+  } catch (err) {
+    yield put(signOutFail(err));
+  }
+}
+
+export function* onSignOut() {
+  yield takeLatest(UserActionTypes.SIGN_OUT_START, userSignOut);
+}
+
 // our user Sagas to be called in root saga
 export function* userSagas() {
   yield all([
     call(onGoogleSignInStart),
     call(onEmailSignIn),
     call(onCheckUserSession),
+    call(onSignOut),
   ]);
 }

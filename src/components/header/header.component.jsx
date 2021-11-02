@@ -2,16 +2,16 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../../assets/crown.svg";
-import { auth } from "../../firebase/firebase.utils";
 import CartIcon from "../cart-icon/cart-icon.component";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 import "./header.styles.scss";
 import { createStructuredSelector } from "reselect";
 import { selectCartHidden } from "../../redux/cart/cart-selectors";
 import { selectCurrentUser } from "../../redux/user/user-selectors";
+import { signOutStart } from "../../redux/user/user-actions";
 
 const Header = (myprops) => {
-  const { user, cartStatus } = myprops;
+  const { user, cartStatus, mySignOutStart } = myprops;
   // console.log(myprops, "what is myprops");
   return (
     <div className="header">
@@ -26,7 +26,7 @@ const Header = (myprops) => {
           CONTACT
         </Link>
         {user ? (
-          <div className="option" onClick={() => auth.signOut()}>
+          <div className="option" onClick={mySignOutStart}>
             SIGN OUT
           </div>
         ) : (
@@ -66,4 +66,8 @@ const getStuffFromStore = createStructuredSelector({
   cartStatus: selectCartHidden,
 });
 
-export default connect(getStuffFromStore)(Header);
+const getAction = (dispatch) => ({
+  mySignOutStart: () => dispatch(signOutStart()),
+});
+
+export default connect(getStuffFromStore, getAction)(Header);
