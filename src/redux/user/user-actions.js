@@ -48,3 +48,19 @@ export const signOutFail = (err) => ({
   type: UserActionTypes.SIGN_OUT_FAILURE,
   payload: err,
 });
+
+// sign up sagas
+export const signUpStart = (userInfo) => ({
+  type: UserActionTypes.SIGN_UP_START,
+  payload: userInfo,
+});
+
+export const signUpSuccess = ({ user, extraData }) => ({
+  type: UserActionTypes.SIGN_UP_SUCCESS,
+  payload: { user, extraData },
+});
+
+export const signUpFail = (err) => ({
+  type: UserActionTypes.SIGN_UP_FAILURE,
+  payload: err,
+});

@@ -1,11 +1,9 @@
 import React from "react";
-
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
-
-import { auth, createUserReference } from "../../firebase/firebase.utils";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import "./sign-up.styles.scss";
+import { connect } from "react-redux";
+import { signUpStart } from "../../redux/user/user-actions";
 
 class SignUp extends React.Component {
   constructor() {
@@ -21,36 +19,14 @@ class SignUp extends React.Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-
     const { displayName, email, password, confirmPassword } = this.state;
-
+    const { signUpStart } = this.props;
     if (password !== confirmPassword) {
       alert("passwords don't match");
       return;
     }
 
-    try {
-      const newUser = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      // console.log(newUser, "what is new User"); // UserCredentialImpl
-      //  need to pass the user object rather than entire newUser
-      await createUserReference(newUser.user, {
-        displayName,
-        hobby: "leetcode practice",
-      });
-
-      this.setState({
-        displayName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-    } catch (error) {
-      console.error(error);
-    }
+    signUpStart({ email, password, displayName });
   };
 
   handleChange = (event) => {
@@ -105,4 +81,7 @@ class SignUp extends React.Component {
   }
 }
 
-export default SignUp;
+const getAction = (dispatch) => ({
+  signUpStart: (stuff) => dispatch(signUpStart(stuff)),
+});
+export default connect(null, getAction)(SignUp);

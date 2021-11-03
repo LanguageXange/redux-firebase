@@ -1,5 +1,9 @@
 import { takeLatest, put, all, call } from "redux-saga/effects";
-import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import { getDoc } from "@firebase/firestore";
 import { UserActionTypes } from "./user-types";
 import {
@@ -13,6 +17,8 @@ import {
   signInSuccess,
   signOutSuccess,
   signOutFail,
+  signUpFail,
+  signUpSuccess,
 } from "./user-actions";
 
 // remember that we receive email and password as an object (user-actions.js) when email sign in start
@@ -22,9 +28,9 @@ import {
 //  payload: 'Firebase: Error (auth/invalid-value-(email),-starting-an-object-on-a-scalar-field).'
 
 // notice repetive code with emailSignIn, googleSignIn and checkUserAuth
-function* getSnapshotFromAuthHelper(userAuth) {
+function* getSnapshotFromAuthHelper(userAuth, someExtraInfo) {
   try {
-    const userRef = yield call(createUserReference, userAuth);
+    const userRef = yield call(createUserReference, userAuth, someExtraInfo);
     const userSnapShot = yield getDoc(userRef);
     yield put(signInSuccess(userSnapShot.data()));
   } catch (err) {
@@ -124,6 +130,56 @@ export function* onSignOut() {
   yield takeLatest(UserActionTypes.SIGN_OUT_START, userSignOut);
 }
 
+// sign up sagas
+// original code in sign-up component
+// ----------------------------------
+// try {
+//   const newUser = await createUserWithEmailAndPassword(
+//     auth,
+//     email,
+//     password
+//   );
+//   // console.log(newUser, "what is new User"); // UserCredentialImpl
+//   //  need to pass the user object rather than entire newUser
+//   await createUserReference(newUser.user, {
+//     displayName,
+//     hobby: "leetcode practice",
+//   });
+
+//   this.setState({
+//     displayName: "",
+//     email: "",
+//     password: "",
+//     confirmPassword: "",
+//   });
+// } catch (error) {
+//   console.error(error);
+// }
+/// --------------------------------
+
+export function* userSignUp(action) {
+  const { email, password, displayName } = action.payload;
+  try {
+    const newUser = yield createUserWithEmailAndPassword(auth, email, password);
+    const userAuth = newUser.user;
+    yield put(signUpSuccess({ user: userAuth, extraData: { displayName } }));
+  } catch (err) {
+    yield put(signUpFail(err));
+  }
+}
+
+export function* signInAfterSignUp(action) {
+  const { user, extraData } = action.payload;
+  yield getSnapshotFromAuthHelper(user, extraData);
+}
+
+export function* onSignUp() {
+  yield takeLatest(UserActionTypes.SIGN_UP_START, userSignUp);
+}
+export function* onSignUpSuccess() {
+  yield takeLatest(UserActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp);
+}
+
 // our user Sagas to be called in root saga
 export function* userSagas() {
   yield all([
@@ -131,5 +187,7 @@ export function* userSagas() {
     call(onEmailSignIn),
     call(onCheckUserSession),
     call(onSignOut),
+    call(onSignUp),
+    call(onSignUpSuccess),
   ]);
 }
