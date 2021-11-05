@@ -1,15 +1,15 @@
 import React from "react";
-import { connect } from "react-redux";
-
+import { useSelector } from "react-redux";
+import { useParams } from "react-router";
 import CollectionItem from "../../components/collection-item/collection-item.component";
-
 import { selectShopItem } from "../../redux/shop/shop-selectors";
-
 import "./collection.styles.scss";
 
-const CollectionPage = ({ collection }) => {
-  //  console.log(props);
-  // match.params.collectionItem
+const CollectionPage = () => {
+  // const stuff = useParams();
+  //console.log(stuff, "what is useparams");
+  const { collectionItem } = useParams();
+  const collection = useSelector(selectShopItem(collectionItem));
   return (
     <div className="collection-page">
       <h2 className="title">{collection.title}</h2>
@@ -21,9 +21,11 @@ const CollectionPage = ({ collection }) => {
     </div>
   );
 };
-// using own Props
-const mapStateToProps = (state, ownProps) => ({
-  collection: selectShopItem(ownProps.match.params.collectionItem)(state),
-});
 
-export default connect(mapStateToProps)(CollectionPage);
+// switch to useParams()
+// using own Props
+// const mapStateToProps = (state, ownProps) => ({
+//   collection: selectShopItem(ownProps.match.params.collectionItem)(state),
+// });
+
+export default CollectionPage;
