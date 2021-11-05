@@ -15,11 +15,11 @@ import { checkUserSession } from "./redux/user/user-actions";
 
 function App() {
   const mycurrentUser = useSelector(selectCurrentUser);
-  const mydispatch = useDispatch();
+  const mydispatch = useDispatch(); // mydispatch method won't update
 
   useEffect(() => {
     mydispatch(checkUserSession());
-  }, []);
+  }, [mydispatch]);
 
   return (
     <div>
