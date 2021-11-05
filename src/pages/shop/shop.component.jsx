@@ -8,6 +8,7 @@ import { fetchCollectionStart } from "../../redux/shop/shop-actions";
 
 function ShopPage({ match, startFetchCollection }) {
   useEffect(() => {
+    // we know this prop will not change
     startFetchCollection();
   }, [startFetchCollection]);
 
