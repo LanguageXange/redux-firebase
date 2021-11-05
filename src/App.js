@@ -7,16 +7,19 @@ import ShopPage from "./pages/shop/shop.component";
 import CheckoutPage from "./pages/checkout/checkout.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
 import Header from "./components/header/header.component";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // selector
-import { createStructuredSelector } from "reselect";
+//import { createStructuredSelector } from "reselect";
 import { selectCurrentUser } from "./redux/user/user-selectors";
 import { checkUserSession } from "./redux/user/user-actions";
 
-function App({ curUser, checkuser }) {
+function App() {
+  const mycurrentUser = useSelector(selectCurrentUser);
+  const mydispatch = useDispatch();
+
   useEffect(() => {
-    checkuser();
-  }, [checkuser]);
+    mydispatch(checkUserSession());
+  }, []);
 
   return (
     <div>
@@ -29,7 +32,7 @@ function App({ curUser, checkuser }) {
           exact
           path="/signin"
           render={() =>
-            curUser ? <Redirect to="/" /> : <SignInAndSignUpPage />
+            mycurrentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />
           }
         />
       </Switch>
@@ -37,13 +40,13 @@ function App({ curUser, checkuser }) {
   );
 }
 
-const getStuffFromStore = createStructuredSelector({
-  // now we have access to curUser prop in App.js
-  curUser: selectCurrentUser,
-});
+// const getStuffFromStore = createStructuredSelector({
+//   // now we have access to curUser prop in App.js
+//   curUser: selectCurrentUser,
+// });
 
-const mapDispatchToProps = (dispatch) => ({
-  checkuser: () => dispatch(checkUserSession()),
-});
+// const mapDispatchToProps = (dispatch) => ({
+//   checkuser: () => dispatch(checkUserSession()),
+// });
 
-export default connect(getStuffFromStore, mapDispatchToProps)(App);
+export default App;
