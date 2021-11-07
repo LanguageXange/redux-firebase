@@ -7,9 +7,9 @@ const path = require("path");
 const stripe = require("stripe")(process.env.MY_STRIPE_SECRET_KEY);
 
 const app = express();
-const port = process.env.PORT || 5000;
+const router = express.Router();
 
-// with express version 4.16+ we don't need bodyParser
+//with express version 4.16+ we don't need bodyParser
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
@@ -18,12 +18,12 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
 
   // any route
-  app.get("*", (req, res) => {
+  router.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
 
-app.post("/payment", (req, res) => {
+router.post("/payment", (req, res) => {
   const body = {
     source: req.body.token.id,
     amount: req.body.amount,
@@ -39,4 +39,27 @@ app.post("/payment", (req, res) => {
   });
 });
 
-exports.handler = serverless(app);
+router.get("/", (req, res) => {
+  res.json({
+    path: "home",
+    name: "Amy",
+  });
+});
+
+router.get("/blah", (req, res) => {
+  res.json({
+    path: "blalh",
+    name: "Booom",
+  });
+});
+
+router.get("/payment", (req, res) => {
+  res.json({
+    path: "payment",
+    name: "charge",
+  });
+});
+
+app.use("/", router);
+
+module.exports.handler = serverless(app);
