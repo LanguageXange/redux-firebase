@@ -1,9 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-
+const serverless = require("serverless-http");
 const path = require("path");
-
-if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 // use the stripe
 const stripe = require("stripe")(process.env.MY_STRIPE_SECRET_KEY);
@@ -25,8 +23,6 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(port, (err) => console.log("error", err));
-
 app.post("/payment", (req, res) => {
   const body = {
     source: req.body.token.id,
@@ -43,9 +39,4 @@ app.post("/payment", (req, res) => {
   });
 });
 
-// -------
-// need to install serverless-http
-// install netlify-cli to test it locally - netlify dev command
-// we can add netlify.toml file and redirect url so that
-// we don't have to type .netlify/functions in our URL
-// exports.handler = ()
+exports.handler = serverless(app);
