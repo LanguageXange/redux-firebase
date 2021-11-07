@@ -5,12 +5,12 @@ require("dotenv").config();
 const AskForMoney = ({ price }) => {
   const cents = price * 100;
   const publishKey = process.env.REACT_APP_API_KEY;
-  // "pk_test_51HObQCAc2iO9zPu9mnoDnYTkUCa1Xw6uGgZ1tB0475zapDTyrElEQu1LUzutSL2DcDszFlwX0ZgdqM4VSec0trL900Zm1LQfQV";
 
+  // url - api/payment - we need to rename server.js to payment.js
   const onToken = (token) => {
     // console.log(token);
     axios({
-      url: "payment", // we set up route in server.js,
+      url: "api/payment", // we set up route in server.js,
       method: "post",
       data: {
         amount: cents,

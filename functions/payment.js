@@ -42,3 +42,10 @@ app.post("/payment", (req, res) => {
     }
   });
 });
+
+// -------
+// need to install serverless-http
+// install netlify-cli to test it locally - netlify dev command
+// we can add netlify.toml file and redirect url so that
+// we don't have to type .netlify/functions in our URL
+// exports.handler = ()
