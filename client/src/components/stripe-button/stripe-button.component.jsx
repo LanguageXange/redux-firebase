@@ -10,7 +10,7 @@ const AskForMoney = ({ price }) => {
   const onToken = (token) => {
     // console.log(token);
     axios({
-      url: "api/payment", // we set up route in server.js,
+      url: "payment",
       method: "post",
       data: {
         amount: cents,
