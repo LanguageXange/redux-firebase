@@ -13,7 +13,7 @@ const port = process.env.PORT || 5000;
 
 // with express version 4.16+ we don't need bodyParser
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 if (process.env.NODE_ENV === "production") {
