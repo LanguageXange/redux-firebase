@@ -1,11 +1,10 @@
 import React from "react";
 import StripeCheckout from "react-stripe-checkout";
 import axios from "axios";
-require("dotenv").config();
+
 const AskForMoney = ({ price }) => {
   const cents = price * 100;
   const publishKey = process.env.REACT_APP_API_KEY;
-  // "pk_test_51HObQCAc2iO9zPu9mnoDnYTkUCa1Xw6uGgZ1tB0475zapDTyrElEQu1LUzutSL2DcDszFlwX0ZgdqM4VSec0trL900Zm1LQfQV";
 
   const onToken = (token) => {
     // console.log(token);
